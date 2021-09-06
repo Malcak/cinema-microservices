@@ -1,3 +1,4 @@
 rootProject.name = 'cinema'
 
 include 'user-service'
+include 'movie-service'
