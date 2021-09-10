@@ -18,11 +18,11 @@ public class MovieController {
 
     @GetMapping
     public ResponseEntity<List<Movie>> findAll(){
-        List<Movie> users = movieService.findAll();
-        if (users.isEmpty()) {
+        List<Movie> movies = movieService.findAll();
+        if (movies.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
-        return ResponseEntity.status(HttpStatus.OK).body(users);
+        return ResponseEntity.status(HttpStatus.OK).body(movies);
     }
 
     @PostMapping
@@ -33,6 +33,15 @@ public class MovieController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Movie> delete(@Valid @PathVariable("id") Long id) {
         Movie movie = movieService.delete(id);
+        if (movie == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(movie);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Movie> findById(@Valid @PathVariable("id") Long id) {
+        Movie movie = movieService.getByID(id);
         if (movie == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
