@@ -1,4 +1,7 @@
 package poli.movie.repositories;
 
-public interface MovieRepository {
+import poli.movie.entities.Movie;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface MovieRepository extends JpaRepository<Movie,Long> {
 }
