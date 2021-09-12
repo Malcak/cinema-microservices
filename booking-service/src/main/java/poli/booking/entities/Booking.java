@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import poli.booking.models.Movie;
+import poli.booking.models.User;
 
 import javax.persistence.*;
 import javax.validation.Valid;
@@ -28,15 +30,21 @@ public class Booking {
     @NotNull(message = "User's id cannot be null")
     @Column(name = "user_id")
     private Long userId;
+    @Transient
+    private User user;
 
     @NotNull(message = "Showtime id cannot be null")
     @Column(name = "showtime_id")
     private Long showtimeId;
+    // TODO: transient showtime;
 
     @Valid
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name="movies_id")
+    @ElementCollection
+    @CollectionTable(name="movies", joinColumns=@JoinColumn(name="booking_id"))
+    @Column(name="movies")
     @JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
+    private List<Long> moviesId;
+    @Transient
     private List<Movie> movies;
 
     @Override

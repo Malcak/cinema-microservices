@@ -3,34 +3,69 @@ package poli.booking.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import poli.booking.clients.MovieClient;
+import poli.booking.clients.UserClient;
 import poli.booking.entities.Booking;
 import poli.booking.repositories.BookingRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class BookingService implements poli.booking.service.Service<Booking, Long> {
 
     private final BookingRepository bookingRepository;
+    private final UserClient userClient;
+    private final MovieClient movieClient;
 
     @Override
     @Transactional(readOnly = true)
     public List<Booking> findAll() {
-        return bookingRepository.findAll();
+        List<Booking> bookings = bookingRepository.findAll();
+        if (!bookings.isEmpty()) {
+            for (Booking booking : bookings) {
+                booking.setUser(userClient.findById(booking.getUserId()));
+                // TODO: booking.setShowtime();
+                booking.setMovies(booking.getMoviesId().stream().map(
+                        movieId -> movieClient.findById(movieId)).collect(Collectors.toList())
+                );
+            }
+        }
+        return bookings;
     }
 
     @Override
     @Transactional(readOnly = true)
     public Booking getById(Long id) {
-        return bookingRepository.findById(id).orElse(null);
+        Optional<Booking> optionalBooking = bookingRepository.findById(id);
+        if (optionalBooking.isPresent()) {
+            Booking booking = optionalBooking.get();
+            booking.setUser(userClient.findById(booking.getUserId()));
+            // TODO: booking.setShowtime();
+            booking.setMovies(booking.getMoviesId().stream().map(movieId -> movieClient.findById(movieId)).collect(Collectors.toList()));
+            return booking;
+        }
+        return null;
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<Booking> getAllByUserId(Long id) {
-        return bookingRepository.findAllByUserId(id);
+
+        List<Booking> bookings = bookingRepository.findAllByUserId(id);
+        if (!bookings.isEmpty()) {
+            for (Booking booking : bookings) {
+                booking.setUser(userClient.findById(booking.getUserId()));
+                // TODO: booking.setShowtime();
+                booking.setMovies(booking.getMoviesId().stream().map(
+                        movieId -> movieClient.findById(movieId)).collect(Collectors.toList())
+                );
+            }
+        }
+        return bookings;
+
     }
 
     @Override
