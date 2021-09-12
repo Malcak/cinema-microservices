@@ -26,6 +26,15 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(users);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<User> findById(@Valid @PathVariable("id") Long id) {
+        User user = userService.getById(id);
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(user);
+    }
+
     @PostMapping
     public ResponseEntity<User> save(@Valid @RequestBody User user) {
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.save(user));

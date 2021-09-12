@@ -22,6 +22,10 @@ public class UserService implements poli.user.services.Service<User, Long> {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public User getById(Long id) { return userRepository.findById(id).orElse(null); }
+
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public User save(User user) {
         return userRepository.save(user);
