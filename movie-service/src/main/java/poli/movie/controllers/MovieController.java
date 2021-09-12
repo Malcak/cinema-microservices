@@ -26,7 +26,7 @@ public class MovieController {
     }
 
     @PostMapping
-    public ResponseEntity save(@Valid @RequestBody Movie movie){
+    public ResponseEntity<Movie> save(@Valid @RequestBody Movie movie){
         return ResponseEntity.status(HttpStatus.CREATED).body(movieService.save(movie));
     }
 
