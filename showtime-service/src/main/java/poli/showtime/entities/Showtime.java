@@ -5,10 +5,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import poli.showtime.models.Movie;
 
 import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -26,15 +28,18 @@ public class Showtime {
     @Column(name = "id", nullable = false, unique = true)
     private Long id;
 
-    @NotEmpty(message = "Date of the showtime is required")
+    @NotNull(message = "Date of the showtime is required")
     @Column(name = "date", nullable = false)
     private Date date;
 
     @Valid
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name="movies_id")
+    @ElementCollection
+    @CollectionTable(name="movies", joinColumns=@JoinColumn(name="showtime_id"))
+    @Column(name="movies")
     @JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
-    private List<Movie> moviesId;
+    private List<Long> moviesId;
+    @Transient
+    private List<Movie> movies;
 
     @Override
     public boolean equals(Object o) {

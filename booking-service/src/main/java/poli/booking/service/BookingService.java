@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import poli.booking.clients.MovieClient;
+import poli.booking.clients.ShowtimeClient;
 import poli.booking.clients.UserClient;
 import poli.booking.entities.Booking;
 import poli.booking.repositories.BookingRepository;
@@ -19,6 +20,7 @@ public class BookingService implements poli.booking.service.Service<Booking, Lon
     private final BookingRepository bookingRepository;
     private final UserClient userClient;
     private final MovieClient movieClient;
+    private final ShowtimeClient showtimeClient;
 
     @Override
     @Transactional(readOnly = true)
@@ -27,7 +29,7 @@ public class BookingService implements poli.booking.service.Service<Booking, Lon
         if (!bookings.isEmpty()) {
             for (Booking booking : bookings) {
                 booking.setUser(userClient.findById(booking.getUserId()));
-                // TODO: booking.setShowtime();
+                booking.setShowtime(showtimeClient.findById(booking.getShowtimeId()));
                 booking.setMovies(booking.getMoviesId().stream().map(
                         movieId -> movieClient.findById(movieId)).collect(Collectors.toList())
                 );
@@ -43,7 +45,7 @@ public class BookingService implements poli.booking.service.Service<Booking, Lon
         if (optionalBooking.isPresent()) {
             Booking booking = optionalBooking.get();
             booking.setUser(userClient.findById(booking.getUserId()));
-            // TODO: booking.setShowtime();
+            booking.setShowtime(showtimeClient.findById(booking.getShowtimeId()));
             booking.setMovies(booking.getMoviesId().stream().map(movieId -> movieClient.findById(movieId)).collect(Collectors.toList()));
             return booking;
         }
@@ -58,7 +60,7 @@ public class BookingService implements poli.booking.service.Service<Booking, Lon
         if (!bookings.isEmpty()) {
             for (Booking booking : bookings) {
                 booking.setUser(userClient.findById(booking.getUserId()));
-                // TODO: booking.setShowtime();
+                booking.setShowtime(showtimeClient.findById(booking.getShowtimeId()));
                 booking.setMovies(booking.getMoviesId().stream().map(
                         movieId -> movieClient.findById(movieId)).collect(Collectors.toList())
                 );

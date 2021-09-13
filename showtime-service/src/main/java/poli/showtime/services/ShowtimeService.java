@@ -3,30 +3,50 @@ package poli.showtime.services;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import poli.showtime.clients.MovieClient;
 import poli.showtime.entities.Showtime;
 import poli.showtime.repositories.ShowtimeRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class ShowtimeService implements poli.showtime.services.Service<Showtime, Long> {
 
     @Autowired
-    ShowtimeRepository showtimeRepository;
+    private final ShowtimeRepository showtimeRepository;
+    private final MovieClient movieClient;
+
 
     @Override
     @Transactional(readOnly = true)
     public List<Showtime> findAll() {
-        return showtimeRepository.findAll();
+        List<Showtime> showtimes = showtimeRepository.findAll();
+        if (!showtimes.isEmpty()) {
+            for (Showtime showtime: showtimes) {
+                showtime.setMovies(showtime.getMoviesId().stream().map(
+                        movieId -> movieClient.findById(movieId)).collect(Collectors.toList())
+                );
+            }
+        }
+        return showtimes;
     }
 
     @Override
     @Transactional(readOnly = true)
     public Showtime getByID(Long id) {
-        return showtimeRepository.findById(id).orElse(null);
+        Optional<Showtime> showtimeOptional = showtimeRepository.findById(id);
+        if (showtimeOptional.isPresent()) {
+            Showtime showtime = showtimeOptional.get();
+            showtime.setMovies(showtime.getMoviesId().stream().map(
+                    movieId -> movieClient.findById(movieId)).collect(Collectors.toList())
+            );
+            return showtime;
+        }
+        return null;
     }
 
     @Override

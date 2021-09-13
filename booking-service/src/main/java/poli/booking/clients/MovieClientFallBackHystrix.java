@@ -3,13 +3,13 @@ package poli.booking.clients;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import poli.booking.models.User;
+import poli.booking.models.Movie;
 
 @Component
 @NoArgsConstructor
-public class UserClientFallBackHystrix implements UserClient {
+public class MovieClientFallBackHystrix implements MovieClient {
     @Override
-    public User findById(Long id) {
+    public Movie findById(Long id) {
         return null;
     }
 }

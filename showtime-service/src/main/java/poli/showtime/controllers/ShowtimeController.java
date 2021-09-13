@@ -1,17 +1,14 @@
 package poli.showtime.controllers;
 
-import com.github.lambdaexpression.annotation.RequestBodyParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import poli.showtime.entities.Movie;
 import poli.showtime.entities.Showtime;
 import poli.showtime.services.ShowtimeService;
 
 import javax.validation.Valid;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -31,7 +28,6 @@ public class ShowtimeController {
 
     @PostMapping
     public ResponseEntity<Showtime> save(@Valid @RequestBody Showtime showtime){
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-mm-dd HH:mm:ss");
         return ResponseEntity.status(HttpStatus.CREATED).body(showtimeService.save(showtime));
     }
 

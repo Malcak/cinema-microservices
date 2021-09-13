@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import poli.booking.models.Movie;
+import poli.booking.models.Showtime;
 import poli.booking.models.User;
 
 import javax.persistence.*;
@@ -36,7 +37,8 @@ public class Booking {
     @NotNull(message = "Showtime id cannot be null")
     @Column(name = "showtime_id")
     private Long showtimeId;
-    // TODO: transient showtime;
+    @Transient
+    private Showtime showtime;
 
     @Valid
     @ElementCollection
