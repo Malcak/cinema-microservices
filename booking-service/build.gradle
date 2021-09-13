@@ -23,6 +23,11 @@ dependencies {
     // https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-netflix-hystrix-dashboard
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-netflix-hystrix-dashboard', version: '2.2.9.RELEASE'
 
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-actuator
+    implementation 'org.springframework.boot:spring-boot-starter-actuator:2.3.10.RELEASE'
+
+    // https://mvnrepository.com/artifact/de.codecentric/spring-boot-admin-starter-client
+    implementation 'de.codecentric:spring-boot-admin-starter-client:2.3.1'
 
     runtimeOnly 'com.h2database:h2'
 
