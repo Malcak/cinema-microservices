@@ -3,6 +3,7 @@ package poli.user.services;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import poli.user.clients.BookingClient;
 import poli.user.entities.User;
 import poli.user.repositories.UserRepository;
 
@@ -14,6 +15,7 @@ import java.util.Optional;
 public class UserService implements poli.user.services.Service<User, Long> {
 
     private final UserRepository userRepository;
+    private final BookingClient bookingClient;
 
     @Override
     @Transactional(readOnly = true)
@@ -35,7 +37,7 @@ public class UserService implements poli.user.services.Service<User, Long> {
     @Transactional(rollbackFor = Exception.class)
     public User delete(Long id) {
         Optional<User> deletedUser = userRepository.findById(id);
-        if (deletedUser.isPresent()) {
+        if (deletedUser.isPresent() && bookingClient.findAllByUserId(id) == null) {
             userRepository.deleteById(id);
             return deletedUser.get();
         }

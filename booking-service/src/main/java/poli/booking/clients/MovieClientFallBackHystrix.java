@@ -1,7 +1,6 @@
 package poli.booking.clients;
 
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import poli.booking.models.Movie;
 

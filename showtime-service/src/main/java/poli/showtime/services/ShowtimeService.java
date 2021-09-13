@@ -50,6 +50,13 @@ public class ShowtimeService implements poli.showtime.services.Service<Showtime,
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public List<Showtime> getAllByMovieId(Long id) {
+        List<Showtime> bookings = showtimeRepository.findAllByMoviesIdContaining(id);
+        return bookings;
+    }
+
+    @Override
     public Showtime save(Showtime showtime) {
         return showtimeRepository.save(showtime);
     }

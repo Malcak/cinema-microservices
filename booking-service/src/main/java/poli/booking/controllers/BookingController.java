@@ -58,4 +58,13 @@ public class BookingController {
         return ResponseEntity.status(HttpStatus.OK).body(bookings);
     }
 
+    @GetMapping("/movies/{movieid}")
+    public ResponseEntity<List<Booking>> getAllByMovieId(@Valid @PathVariable("movieid") Long movieid) {
+        List<Booking> bookings = bookingService.getAllByUserId(movieid);
+        if (bookings.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(bookings);
+    }
+
 }

@@ -49,6 +49,15 @@ public class ShowtimeController {
         return ResponseEntity.status(HttpStatus.OK).body(showtime);
     }
 
+    @GetMapping("/movies/{movieid}")
+    public ResponseEntity<List<Showtime>> findAllByMovieId(@Valid @PathVariable("movieid") Long movieid) {
+        List<Showtime> showtimes = showtimeService.getAllByMovieId(movieid);
+        if (showtimes.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(showtimes);
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<Showtime> edit(@Valid @PathVariable("id") Long id, @Valid @RequestBody Showtime showtime) {
         Showtime showtimeVerify = showtimeService.edit(id,showtime);

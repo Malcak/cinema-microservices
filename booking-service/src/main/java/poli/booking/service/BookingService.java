@@ -71,6 +71,19 @@ public class BookingService implements poli.booking.service.Service<Booking, Lon
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public List<Booking> getAllByMovieId(Long id) {
+        List<Booking> bookings = bookingRepository.findAllByMoviesIdContaining(id);
+        if (bookings.isEmpty()) {
+            for (Booking booking : bookings) {
+                booking.setUser(userClient.findById(booking.getUserId()));
+                booking.setShowtime(showtimeClient.findById(booking.getShowtimeId()));
+            }
+        }
+        return bookings;
+    }
+
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public Booking save(Booking booking) {
         return bookingRepository.save(booking);

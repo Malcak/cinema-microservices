@@ -2,6 +2,8 @@ package poli.movie.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import poli.movie.clients.BookingClient;
+import poli.movie.clients.ShowtimeClient;
 import poli.movie.entities.Movie;
 import poli.movie.repositories.MovieRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +18,8 @@ public class MovieService implements poli.movie.services.Service<Movie,Long> {
 
     @Autowired
     private final MovieRepository movieRepository;
+    private final ShowtimeClient showtimeClient;
+    private final BookingClient bookingClient;
 
     @Override
     @Transactional(readOnly = true)
@@ -39,7 +43,7 @@ public class MovieService implements poli.movie.services.Service<Movie,Long> {
     @Transactional(rollbackFor = Exception.class)
     public Movie delete(Long id) {
         Optional<Movie> toDelete = movieRepository.findById(id);
-        if(toDelete.isPresent()){
+        if(toDelete.isPresent() && showtimeClient.findAllByMovieId(id) == null || bookingClient.getAllByMovieId(id) == null){
             movieRepository.deleteById(id);
             return toDelete.get();
         }
