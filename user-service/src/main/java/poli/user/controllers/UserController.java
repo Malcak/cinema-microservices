@@ -39,4 +39,13 @@ public class UserController {
         }
         return ResponseEntity.status(HttpStatus.OK).body(user);
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<User> getById(@Valid @PathVariable("id") Long id) {
+        User user = userService.delete(id);
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(user);
+    }
 }
